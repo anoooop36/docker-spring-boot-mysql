@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: demo
+  name: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: demo
+    spec:
+      containers:
+      - image: devidvilla36/accessing-data-mysql:0.0.1-SNAPSHOT
+        name: demo
+        resources: {}
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mysql://mysql:3306/mydatabase"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "myuser"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "secret"
+status: {}
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo
+spec:
+  selector:
+    app: demo
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: LoadBalancer
